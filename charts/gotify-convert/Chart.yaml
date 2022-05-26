@@ -1,0 +1,6 @@
+apiVersion: v2
+name: gotify-convert
+description: A Helm chart for gotify-convert
+type: application
+version: 0.0.1
+appVersion: "0.0.1"

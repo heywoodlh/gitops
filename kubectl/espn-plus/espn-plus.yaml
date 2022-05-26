@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: espn-plus
+  name: espn-plus
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: espn-plus
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: espn-plus
+    spec:
+      containers:
+      - image: m0ngr31/eplustv:latest
+        imagePullPolicy: IfNotPresent
+        name: espn-plus 
+        env:          
+        - name: ESPN_USER 
+          valueFrom:
+            secretKeyRef:
+              name: espn-plus-secrets
+              key: username
+        - name: ESPN_PASS
+          valueFrom:
+            secretKeyRef:
+              name: espn-plus-secrets
+              key: password
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: espn-plus
+  name: espn-plus
+  namespace: default
+  selfLink: /api/v1/namespaces/default/services/espn-plus
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8000
+  selector:
+    app: espn-plus

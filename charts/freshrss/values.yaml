@@ -1,0 +1,31 @@
+freshrss:
+  global:
+    nameOverride: "freshrss"
+    fullnameOverride: "freshrss"
+  controller:
+    enabled: true
+    type: deployment
+    replicas: 1
+  image:
+    repository: docker.io/linuxserver/freshrss
+    pullPolicy: IfNotPresent
+    tag: "1.19.2"
+  service:
+    main:
+      enabled: true 
+      primary: true
+      type: LoadBalancer 
+      ports:
+        http:
+          primary: true
+          enabled: true
+          port: 80
+          targetPort: 80 
+  persistence:
+    config:
+      enabled: true
+      type: pvc
+      mountPath: /config
+      size: 50Gi
+      retain: true
+      storageClass: nfs-client

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: freshrss
+version: 0.1.0
+dependencies:
+  - name: freshrss
+    version: 6.0.1 
+    repository: https://k8s-at-home.com/charts/
+

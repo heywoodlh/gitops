@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: heywoodlh/warpgate
+  pullPolicy: Always
+  tag: "0.1.0"
+
+serviceAccount:
+  create: true
+
+service:
+  type: LoadBalancer
+  http:
+    port: 443
+  ssh:
+    port: 22
+
+persistence:
+  enabled: true
+  storageSize: 5G
+  storageClass: "nfs-client"
+                    
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+ingress:
+  enabled: false

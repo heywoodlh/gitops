@@ -1,0 +1,70 @@
+statping: 
+  image:
+    repository: statping/statping
+    tag: "v0.90.74"
+    pullPolicy: IfNotPresent
+  
+  env:
+    TZ: America/Denver
+    NAME: heywoodlh-statping 
+    DESCRIPTION: "statping instance for heywoodlh"
+    VIRTUAL_HOST: ""
+    DB_CONN: postgres
+    DB_HOST: '{{ include "common.names.fullname" .}}-postgresql'
+    POSTGRES_SSLMODE: "disable"
+    DB_USER: "{{ .Values.postgresql.postgresqlUsername }}"
+    DB_PASS: "{{ .Values.postgresql.postgresqlPassword }}"
+    DB_DATABASE: "{{ .Values.postgresql.postgresqlDatabase }}"
+    USE_CDN: false
+    DISABLE_LOGS: false
+    # -- dashboard admin user (needed to edit)
+    # ADMIN_USER: admin 
+    # -- dashboard admin password (needed to edit)
+    # ADMIN_PASSWORD: admin
+    # -- dashboard admin email
+    # ADMIN_EMAIL: info@example.com
+  
+  # -- Configures service settings for the chart.
+  # @default -- See values.yaml
+  service:
+    main:
+      enabled: true
+      type: LoadBalancer
+      ports:
+        http:
+          port: 80
+          targetPort: 8080
+  
+  ingress:
+    # -- Enable and configure ingress settings for the chart under this key.
+    # @default -- See values.yaml
+    main:
+      enabled: false
+  
+  # -- Configure persistence settings for the chart under this key.
+  # @default -- See values.yaml
+  persistence:
+    data:
+      enabled: true 
+      mountPath: /app
+      type: pvc
+      size: 5Gi
+      retain: true
+      storageClass: nfs-client
+      accessMode: ReadWriteMany
+
+  
+  # -- Enable and configure postgresql database subchart under this key.
+  #    For more options see [postgresql chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+  # @default -- See values.yaml
+  postgresql:
+    enabled: true
+    postgresqlUsername: postgres
+    postgresqlPassword: postgres
+    postgresqlDatabase: postgres
+    persistence:
+      enabled: true
+      mountPath: /bitnami/postgresql
+      storageClass: "nfs-client"
+      size: 5Gi
+      accessMode: ReadWriteMany

@@ -1,0 +1,55 @@
+plex:
+  global:
+    nameOverride: "plex"
+    fullnameOverride: "plex"
+  controller:
+    enabled: true
+    type: deployment
+    replicas: 1
+  image:
+    repository: linuxserver/plex 
+    pullPolicy: Always 
+    tag: "latest"
+  service:
+    main:
+      enabled: true 
+      primary: true
+      type: LoadBalancer
+      loadBalancerIP: 10.0.60.11 
+      ports:
+        http:
+          primary: true
+          enabled: true
+          port: 32400 
+          targetPort: 32400 
+  nodeSelector: 
+    kubernetes.io/hostname: apps
+  hostNetwork: true
+  persistence:
+    config:
+      enabled: true
+      type: pvc
+      mountPath: /config
+      size: 20Gi
+      retain: true
+      storageClass: plex-local
+      existingClaim: plex-config  
+    downloads:
+      enabled: true
+      type: emptyDir
+      mountPath: /downloads
+      retain: false
+    media:
+      enabled: true
+      existingClaim: nfs-media 
+      mountPath: /media
+      retain: true
+  env:
+    - name: PUID
+      value: 1000
+    - name: PGID
+      value: 1000
+    - name: TZ
+      value: "America/Denver"
+    - name: VERSION
+      value: "latest"

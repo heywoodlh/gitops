@@ -1,0 +1,51 @@
+radarr:
+  global:
+    nameOverride: "radarr"
+    fullnameOverride: "radarr"
+  controller:
+    enabled: true
+    type: deployment
+    replicas: 1
+  image:
+    repository: linuxserver/radarr
+    pullPolicy: IfNotPresent
+    tag: "0.0.5553"
+  service:
+    main:
+      enabled: true 
+      primary: true
+      type: LoadBalancer
+      loadBalancerIP: 10.0.60.15
+      ports:
+        http:
+          primary: true
+          enabled: true
+          port: 80 
+          targetPort: 7878 
+#  nodeSelector: 
+#    kubernetes.io/hostname: apps
+  persistence:
+    config:
+      enabled: true
+      type: pvc
+      mountPath: /config
+      size: 1Gi
+      retain: true
+      storageClass: nfs-client
+    downloads:
+      enabled: true
+      type: emptyDir
+      mountPath: /downloads
+      retain: false
+    media:
+      enabled: true
+      existingClaim: nfs-media 
+      mountPath: /media
+      retain: true
+  env:
+    - name: PUID
+      value: 1000
+    - name: PGID
+      value: 1000
+    - name: TZ
+      value: "America/Denver"

@@ -1,0 +1,15 @@
+{{- if eq .Values.persistence.enabled true }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  name: warpgate-data 
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.storageSize }}
+  storageClassName: {{ .Values.persistence.storageClass }} 
+status: {}
+{{- end }}

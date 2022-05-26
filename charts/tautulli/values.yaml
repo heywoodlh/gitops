@@ -1,0 +1,47 @@
+tautulli:
+  global:
+    nameOverride: "tautulli"
+    fullnameOverride: "tautulli"
+  controller:
+    enabled: true
+    type: deployment
+    replicas: 1
+  image:
+    repository: linuxserver/tautulli
+    pullPolicy: IfNotPresent
+    tag: "amd64-2.9.4"
+  service:
+    main:
+      enabled: true 
+      primary: true
+      type: LoadBalancer 
+      ports:
+        http:
+          primary: true
+          enabled: true
+          port: 80
+          targetPort: 8181
+  persistence:
+    config:
+      enabled: true
+      type: pvc
+      mountPath: /config
+      size: 1Gi
+      retain: true
+      storageClass: nfs-client
+      accessMode: ReadWriteOnce
+    scripts:
+      enabled: true
+      type: pvc
+      mountPath: /scripts
+      size: 10Gi
+      retain: true
+      storageClass: nfs-client
+      accessMode: ReadWriteOnce
+  env:
+    - name: PUID
+      value: 1000
+    - name: PGID
+      value: 1000
+    - name: TZ
+      value: "America/Denver"

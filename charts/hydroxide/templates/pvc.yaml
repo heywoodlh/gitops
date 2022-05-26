@@ -1,0 +1,16 @@
+{{- if eq .Values.persistence.enabled true }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  name: hydroxide-config 
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.storage }} 
+  storageClassName: {{ .Values.persistence.storageClassName }} 
+status: {}
+{{ end  }}
+

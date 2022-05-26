@@ -1,0 +1,6 @@
+apiVersion: v2
+name: hydrogen
+description: A Helm chart for hydrogen
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

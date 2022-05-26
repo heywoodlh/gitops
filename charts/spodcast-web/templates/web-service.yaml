@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: spodcast-web
+  name: spodcast-web
+spec:
+  ports:
+    - name: "spodcast-web"
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+  selector:
+    io.kompose.service: spodcast-web
+status:
+  loadBalancer: {}

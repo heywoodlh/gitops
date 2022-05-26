@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hydroxide.fullname" . }}
+  labels:
+    {{- include "hydroxide.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hydroxide.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "hydroxide.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "hydroxide.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["hydroxide", "-imap-host", "0.0.0.0", "-smtp-host", "0.0.0.0", "-carddav-host", "0.0.0.0", "-debug", "serve"]
+          ports:
+            - name: imap
+              containerPort: 1143
+              protocol: TCP
+            - name: smtp
+              containerPort: 1025
+              protocol: TCP
+            - name: carddav
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: imap
+            tcpSocket:
+              port: smtp
+            tcpSocket:
+              port: carddav
+          readinessProbe:
+            tcpSocket:
+              port: imap
+            tcpSocket:
+              port: smtp
+            tcpSocket:
+              port: carddav
+          {{- if eq .Values.persistence.enabled true }}
+          volumeMounts:
+          - name: hydroxide-config
+            mountPath: /root/.config/hydroxide
+          {{end}}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if eq .Values.persistence.enabled true }}
+      volumes:
+      - name: hydroxide-config
+        persistentVolumeClaim:
+          claimName: hydroxide-config
+      {{end}}

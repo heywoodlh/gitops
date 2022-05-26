@@ -1,0 +1,6 @@
+apiVersion: v2
+name: bibliogram
+description: Bibliogram an open source front-end for Youtube
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

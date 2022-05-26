@@ -1,0 +1,8 @@
+name: spotify-web
+description: A generated Helm Chart for spotify-web from Skippbox Kompose
+version: 0.0.1
+apiVersion: v1
+keywords:
+  - spotify-web
+sources:
+home:

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: spodcast-php
+  name: spodcast-php
+spec:
+  ports:
+    - name: "fastcgi-php"
+      port: 9000
+      targetPort: 9000
+  type: LoadBalancer
+  selector:
+    io.kompose.service: spodcast-php
+status:
+  loadBalancer: {}

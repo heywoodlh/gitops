@@ -1,0 +1,12 @@
+nfs-subdir-external-provisioner:
+  nfs:
+    server: 10.0.50.5
+    path: /media/disk2/kube
+    mountOptions:
+    - rw
+    - bg
+    - hard
+    - rsize=1048576
+    - wsize=1048576
+    - tcp
+    - timeo=600

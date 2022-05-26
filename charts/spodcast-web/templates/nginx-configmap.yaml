@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spodcast-web-conf
+data:
+  sites-enabled: |
+    server {
+            listen 80;
+            listen [::]:80;
+    
+            root /spodcast/html;
+    	
+            index .index.php;
+    
+            # these files should not be accessible
+            location ~\.(json|info)$ {
+                    deny all;
+                    return 404;
+            }
+    
+            location / {
+                    try_files $uri $uri/ =404;
+            }
+    
+            location ~ \.php$ {
+                    include snippets/fastcgi-php.conf;
+                    fastcgi_pass spodcast-php:9000;
+            }
+    }

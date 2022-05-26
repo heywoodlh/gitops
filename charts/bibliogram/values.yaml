@@ -1,0 +1,54 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/heywoodlh/bibliogram
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: "bibliogram"
+fullnameOverride: "bibliogram"
+
+serviceAccount:
+  create: false 
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  
+securityContext: {}
+
+service:
+  enabled: true
+  type: LoadBalancer
+  port: 80 
+  ports:
+  - port: 10407
+    targetPort: 10407
+  selector:
+    app: bibliogram 
+
+ingress:
+  enabled: false
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env:
+  WEBSITE_ORIGIN: "http://bibliogram.default.heywoodlh.tech"
+  DEFAULT_THEME: "pitchblack"
+  REWRITE_YOUTUBE: "http://cloudtube.kube"
+  REWRITE_TWITTER: "https://nitter.net"

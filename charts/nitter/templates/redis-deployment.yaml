@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: redis
+  name: nitter-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: redis
+    spec:
+      containers:
+        - image: bitnami/redis
+          name: redis
+          resources: {}
+          volumeMounts:
+            - mountPath: /bitnami/redis/data
+              name: redis-data
+          env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: nitter-secrets
+                key: redis_password
+      restartPolicy: Always
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data
+status: {}

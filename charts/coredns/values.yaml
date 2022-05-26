@@ -1,0 +1,55 @@
+coredns:
+  controller:
+    enabled: true
+    type: deployment
+    replicas: 1
+  image:
+    repository: coredns/coredns
+    pullPolicy: IfNotPresent
+    tag: "1.8.6"
+  serviceType: "LoadBalancer"
+  service:
+    loadBalancerIP: "10.0.60.5"
+    ports:
+    - port: 53
+      targetPort: 53
+      protocol: UDP
+  isClusterService: false
+  servers:
+  - zones:
+    - zone: .
+      scheme: dns://
+      use_tcp: false
+    - zone: heywoodlh.tech.
+      scheme: dns://
+      use_tcp: false
+    port: 53
+    plugins:
+    - name: errors
+    - name: health
+      configBlock: |-
+        lameduck 5s
+    - name: kubernetes 
+      parameters: cluster.local
+    - name: k8s_external 
+      parameters: heywoodlh.tech
+#    - name: rewrite stop
+#      configBlock: |-
+#        name regex (.*)\.heywoodlh\.tech {1}.default.svc.cluster.local
+#        answer name (.*).default.svc.cluster.local {1}.heywoodlh.tech
+    - name: ready
+    - name: forward
+      parameters: . /etc/resolv.conf
+    - name: cache
+      parameters: 30
+    - name: loop
+    - name: reload
+    - name: loadbalance 
+    #- name: file
+      #parameters: /etc/coredns/heywoodlh.tech
+#  zoneFiles:
+   #- filename: heywoodlh.tech 
+    #domain: heywoodlh.tech 
+    #contents: |
+      #heywoodlh.tech.   IN SOA micah.ns.cloudflare.com. dns.cloudflare.com. 2038196782 10000 2400 604800 3600
+      #coredns.heywoodlh.tech. IN A   10.0.60.5

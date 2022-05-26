@@ -1,0 +1,16 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dns-udp  
+  namespace: default 
+spec:
+  selector:
+    app: coredns 
+  ports:
+  - protocol: UDP
+    port: 53
+    targetPort: 53
+    name : dns-udp
+  type: LoadBalancer
+  loadBalancerIP: 10.0.60.5

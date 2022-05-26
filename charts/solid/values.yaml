@@ -1,0 +1,178 @@
+community-solid-server:
+  ## Community Solid Server image
+  ## @section Image parameters
+  ## @param image.registry CSS image registry
+  ## @param image.repository CSS image repository
+  ## @param image.tag CSS image tag (immutable tags are recommended)
+  ## @param image.pullPolicy CSS image pull policy
+  ## @param image.pullSecrets Specify docker-registry secret names as an array
+  ##
+  image:
+    registry: docker.io
+    repository: solidproject/community-server
+    tag: "4.0.1"
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## Example:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+  
+  ## @section Common parameters
+  ## @param nameOverride String to partially override css.fullname
+  ##
+  nameOverride: ""
+  ## @param fullnameOverride String to fully override css.fullname
+  ##
+  fullnameOverride: ""
+  
+  ## @section Community Solid Server parameters
+  ## Solid/community-server, ref: https://github.com/solid/community-server
+  
+  ## @param config.bundled Use one of the bundled configs (options: default, file, sparlql-endpoint, etc.)
+  ## @param config.configMapName Name of configMap holding a custom css config
+  ## @param config.configMapKey Key for the configfile to be used from the configMap
+  config:
+    ### Config options are: default, file, dynamic (more to be added)
+    bundled: default
+    # One can declare a configmap name from which a custom JSON-LD config can be loaded into css
+    configMapName: ""
+    configMapKey: ""
+  
+  ## @param logLevel Log level: silly, debug, verbose, info, warn, error
+  logLevel: info
+  ## @param showStacktrace Enables detailed logging on error pages.
+  showStacktrace: false
+  
+  ## @param baseUrlOverride From the helm config, an appropriate --baseUrl value will be passed to the community server. If however you wish to override this set this parameter appropriately.
+  baseUrlOverride: "solid.heywoodlh.tech"
+  
+  ## @section Persistence parameters
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    ## @param persistence.enabled Enable persistence on CSS using a `PersistentVolumeClaim`. If false, use emptyDir
+    ##
+    enabled: true
+    ## @param persistence.existingClaim Name of an existing `PersistentVolumeClaim` for CSS replicas
+    ## NOTE: When it's set the rest of persistence parameters are ignored
+    ##
+    ## existingClaim: ""
+    ## @param persistence.subPath Subdirectory of the volume to mount at (mostly useful when using an existing claim)
+    ##
+    ## subPath: ""
+    ## @param persistence.storageClass CSS persistent volume storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: "nfs-client"
+    ## @param persistence.size CSS persistent volume size
+    ##
+    size: 5Gi
+    ## @param persistence.selector Selector to match an existing Persistent Volume
+    ## selector:
+    ##   matchLabels:
+    ##     app: my-app
+    ##
+    selector: {}
+  ## @section Kubernetes Service parameters
+  ## CSS Kubernetes service parameters
+  service:
+    type: LoadBalancer
+    port: 80
+    nodePort: ""
+  
+  ## @section Ingress resource parameters
+  ## Configure the ingress resource that allows you to access the
+  ## CSS installation. Set up the URL
+  ## ref: https://kubernetes.io/docs/user-guide/ingress/
+  ##
+  ingress:
+    ## @param ingress.enabled Set to true to enable ingress record generation
+    ##
+    enabled: false
+  
+    ## @param ingress.host When the ingress is enabled, a host pointing to this will be created
+    ##
+    host: CSS.local
+    ## @param ingress.path Default path for the ingress resource
+    ## The Path to CSS. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+    ##
+    path: /
+    ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+    ## For a full list of possible ingress annotations, please see
+    ## ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md
+    ## Use this parameter to set the required annotations for cert-manager, see
+    ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+    ##
+    ## e.g:
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+    annotations: {}
+    ## @param ingress.tls TLS Configuration
+      ##
+    tls: []
+    ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+    ##
+    ingressClassName: ""
+  
+  ## @section Infrastructure parameters
+  ## CSS containers' resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param resources.limits The resources limits for CSS containers
+  ## @param resources.requests The requested resources for CSS containers
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 1Gi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 250m
+    ##    memory: 256Mi
+    requests: {}
+  ## @param podAnnotations CSS Pod annotations
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+  ## @param securityContext Security Context for CSS Container
+  ##
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  ## @param podSecurityContext Security Context for CSS Pod
+  ##
+  podSecurityContext: {}
+    # fsGroup: 2000
+  ## @param nodeSelector Node labels for pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+  ## @param tolerations Tolerations for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+  ## @param affinity Affinity for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+  

@@ -1,0 +1,39 @@
+heimdall:
+  global:
+    nameOverride: heimdall
+  
+  controller:
+    enabled: true
+    type: deployment
+    replicas: 1
+    strategy:
+    rollingUpdate:
+      unavailable:
+      surge:
+      partition:
+    revisionHistoryLimit: 3
+  
+  image:
+    repository: docker.io/linuxserver/heimdall
+    tag: 2.2.2
+  service:
+    main:
+      enabled: true 
+      primary: true
+      type: LoadBalancer
+      ports:
+        http:
+          primary: true
+          enabled: true
+          port: 80
+          targetPort: 80
+#  nodeSelector: 
+#    kubernetes.io/hostname: apps
+  persistence:
+    config:
+      enabled: true
+      type: pvc
+      mountPath: /config
+      size: 1Gi
+      retain: true
+      storageClass: nfs-client

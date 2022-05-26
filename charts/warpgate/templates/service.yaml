@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "warpgate.fullname" . }}
+  labels:
+    {{- include "warpgate.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.http.port }}
+      targetPort: 8888
+      protocol: TCP
+      name: http
+    - port: {{ .Values.service.ssh.port }}
+      targetPort: 2222
+      protocol: TCP
+      name: ssh
+  selector:
+    {{- include "warpgate.selectorLabels" . | nindent 4 }}

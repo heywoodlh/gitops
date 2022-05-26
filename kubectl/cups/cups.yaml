@@ -1,0 +1,166 @@
+---
+apiVersion: v1
+data:
+  cupsd.conf: "#\n#\n# Sample configuration file for the CUPS scheduler.  See \"man
+    cupsd.conf\" for a\n# complete description of this file.\n#\n\n# Log general information
+    in error_log - change \"warn\" to \"debug\"\n# for troubleshooting...\nLogLevel
+    debug2\n\n# Deactivate CUPS' internal logrotating, as we provide a better one,
+    especially\n# LogLevel debug2 gets usable now\nMaxLogSize 0\n\n# Listen to all\nPort
+    631\nListen /var/run/cups/cups.sock\nListen 0.0.0.0:631 \n\n# Show shared
+    printers on the local network.\nBrowsing On\nBrowseLocalProtocols dnssd\n\n# Default
+    authentication type, when authentication is required...\nDefaultAuthType Basic\nDefaultEncryption
+    IfRequested\n\n# Web interface setting...\nWebInterface Yes\n\n# Restrict access
+    to the server...\n<Location />\n  Order allow,deny\n  Allow all\n</Location>\n\n#
+    Restrict access to the admin pages...\n<Location /admin>\n  Order allow,deny\n
+    \ Allow all\n</Location>\n\n# Restrict access to configuration files...\n<Location
+    /admin/conf>\n  AuthType Default\n  Require user @SYSTEM\n  Order allow,deny\n
+    \ Allow all\n</Location>\n\n# Set the default printer/job policies...\n<Policy
+    default>\n  # Job/subscription privacy...\n  JobPrivateAccess default\n  JobPrivateValues
+    default\n  SubscriptionPrivateAccess default\n  SubscriptionPrivateValues default\n\n
+    \ # Job-related operations must be done by the owner or an administrator...\n
+    \ <Limit Create-Job Print-Job Print-URI Validate-Job>\n    Order deny,allow\n
+    \ </Limit>\n\n  <Limit Send-Document Send-URI Hold-Job Release-Job Restart-Job
+    Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription
+    Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job
+    Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document>\n    Require user @OWNER
+    @SYSTEM\n    Order deny,allow\n  </Limit>\n\n  # All administration operations
+    require an administrator to authenticate...\n  <Limit CUPS-Add-Modify-Printer
+    CUPS-Delete-Printer CUPS-Add-Modify-Class CUPS-Delete-Class CUPS-Set-Default CUPS-Get-Devices>\n
+    \   AuthType Default\n    Require user @SYSTEM\n    Order deny,allow\n  </Limit>\n\n
+    \ # All printer operations require a printer operator to authenticate...\n  <Limit
+    Pause-Printer Resume-Printer Enable-Printer Disable-Printer Pause-Printer-After-Current-Job
+    Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer
+    Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After Cancel-Jobs CUPS-Accept-Jobs
+    CUPS-Reject-Jobs>\n    AuthType Default\n    Require user @SYSTEM\n    Order deny,allow\n
+    \ </Limit>\n\n  # Only the owner or an administrator can cancel or authenticate
+    a job...\n  <Limit Cancel-Job CUPS-Authenticate-Job>\n    Require user @OWNER
+    @SYSTEM\n    Order deny,allow\n  </Limit>\n\n  <Limit All>\n    Order deny,allow\n
+    \ </Limit>\n</Policy>\n\n# Set the authenticated printer/job policies...\n<Policy
+    authenticated>\n  # Job/subscription privacy...\n  JobPrivateAccess default\n
+    \ JobPrivateValues default\n  SubscriptionPrivateAccess default\n  SubscriptionPrivateValues
+    default\n\n  # Job-related operations must be done by the owner or an administrator...\n
+    \ <Limit Create-Job Print-Job Print-URI Validate-Job>\n    AuthType Default\n
+    \   Order deny,allow\n  </Limit>\n\n  <Limit Send-Document Send-URI Hold-Job Release-Job
+    Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription
+    Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job
+    Resume-Job Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document>\n    AuthType
+    Default\n    Require user @OWNER @SYSTEM\n    Order deny,allow\n  </Limit>\n\n
+    \ # All administration operations require an administrator to authenticate...\n
+    \ <Limit CUPS-Add-Modify-Printer CUPS-Delete-Printer CUPS-Add-Modify-Class CUPS-Delete-Class
+    CUPS-Set-Default>\n    AuthType Default\n    Require user @SYSTEM\n    Order deny,allow\n
+    \ </Limit>\n\n  # All printer operations require a printer operator to authenticate...\n
+    \ <Limit Pause-Printer Resume-Printer Enable-Printer Disable-Printer Pause-Printer-After-Current-Job
+    Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer
+    Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After Cancel-Jobs CUPS-Accept-Jobs
+    CUPS-Reject-Jobs>\n    AuthType Default\n    Require user @SYSTEM\n    Order deny,allow\n
+    \ </Limit>\n\n  # Only the owner or an administrator can cancel or authenticate
+    a job...\n  <Limit Cancel-Job CUPS-Authenticate-Job>\n    AuthType Default\n    Require
+    user @OWNER @SYSTEM\n    Order deny,allow\n  </Limit>\n\n  <Limit All>\n    Order
+    deny,allow\n  </Limit>\n</Policy>\n\n#\n#\n"
+kind: ConfigMap
+metadata:
+  name: cupsd-conf
+  namespace: default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cups-data
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs-client"
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cups
+  name: cups
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cups
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: cups
+    spec:
+      containers:
+      - image: heywoodlh/cups:2.2.10
+        imagePullPolicy: IfNotPresent
+        name: cups
+        resources: {}
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/cups/
+          name: cups-data
+        - mountPath: /etc/cups/cupsd.conf
+          name: cupsd-conf
+          subPath: cupsd.conf
+        - mountPath: /var/run/dbus
+          name: dbus-host-vol
+        - mountPath: /dev/bus/usb
+          name: usb-host-vol
+      nodeSelector:
+        kubernetes.io/hostname: apps
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: cups-data
+        persistentVolumeClaim:
+          claimName: cups-data
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: cupsd.conf
+            path: cupsd.conf
+          name: cupsd-conf
+        name: cupsd-conf
+      - hostPath:
+          path: /tmp/printyppd
+          type: ""
+        name: printy-ppd
+      - hostPath:
+          path: /var/run/dbus
+          type: ""
+        name: dbus-host-vol
+      - hostPath:
+          path: /dev/bus/usb
+          type: ""
+        name: usb-host-vol
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cups
+  name: cups
+  namespace: default
+  selfLink: /api/v1/namespaces/default/services/cups
+spec:
+  loadBalancerIP: 10.0.60.12
+  type: LoadBalancer
+  ports:
+  - port: 631
+    targetPort: 631
+  selector:
+    app: cups

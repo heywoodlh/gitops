@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nitter
+  name: nitter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nitter
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: nitter
+    spec:
+      containers:
+        - env:
+            - name: REDIS_HOST
+              value: "nitter-redis"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nitter-secrets
+                  key: redis_password
+          image: heywoodlh/nitter:2022_01_snapshot
+          name: nitter
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}

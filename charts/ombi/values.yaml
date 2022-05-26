@@ -1,0 +1,36 @@
+ombi:  
+  image:
+    repository: docker.io/linuxserver/ombi
+    tag: 4.20.0-development 
+    pullPolicy: IfNotPresent
+  
+    TZ: America/Denver
+    PUID: "1000"
+    PGID: "1000"
+
+  service:
+    main:
+      enabled: true
+      primary: true
+      type: LoadBalancer
+      ports:
+        http:
+          primary: true
+          enabled: true
+          port: 80
+          targetPort: 3579
+  
+  ingress:
+    # -- Enable and configure ingress settings for the chart under this key.
+    # @default -- See values.yaml
+    main:
+      enabled: false
+
+  persistence:
+    config:
+      enabled: true
+      type: pvc
+      mountPath: /config
+      size: 1Gi
+      retain: true
+      storageClass: nfs-client

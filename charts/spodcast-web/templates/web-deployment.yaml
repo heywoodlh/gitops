@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: spodcast-web
+  name: spodcast-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: spodcast-web
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: spodcast-web
+    spec:
+      containers:
+        - image: heywoodlh/spodcast-web:2022_02_snapshot
+          name: spodcast-web
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources: {}
+          volumeMounts:
+            - mountPath: /spodcast
+              name: spodcast-data
+            - mountPath: /etc/nginx/sites-enabled/
+              name: spodcast-web-conf
+      restartPolicy: Always
+      volumes:
+        - name: spodcast-data
+          persistentVolumeClaim:
+            claimName: spodcast-data
+        - name: spodcast-web-conf
+          configMap:
+            name: spodcast-web-conf
+            items:
+              - key: sites-enabled
+                path: spodcast
+status: {}

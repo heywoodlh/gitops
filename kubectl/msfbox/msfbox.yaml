@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: msfbox-ssh 
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs-client"
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: msfbox
+  name: msfbox
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msfbox
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: msfbox
+    spec:
+      containers:
+      - image: heywoodlh/msfbox:2022_03_snapshot
+        imagePullPolicy: IfNotPresent
+        name: msfbox 
+        volumeMounts:
+        - mountPath: /home/msfbox/.ssh
+          name: msfbox-ssh
+      restartPolicy: Always
+      volumes:
+      - name: msfbox-ssh
+        persistentVolumeClaim:
+          claimName: msfbox-ssh
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: msfbox
+  name: msfbox
+  namespace: default
+  selfLink: /api/v1/namespaces/default/services/msfbox
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 22
+    targetPort: 22
+  selector:
+    app: msfbox

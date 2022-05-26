@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: browserless
+  name: browserless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: browserless
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: browserless
+    spec:
+      containers:
+        - image: browserless/chrome:1.43-chrome-stable
+          name: browserless
+          resources: {}
+      restartPolicy: Always
+status: {}

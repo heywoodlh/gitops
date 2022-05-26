@@ -1,0 +1,7 @@
+apiVersion: v2
+name: cloudtube
+description: Helm chart for cloudtube
+
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

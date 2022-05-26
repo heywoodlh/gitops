@@ -1,0 +1,7 @@
+apiVersion: v2
+name: solid
+version: 0.1.0
+dependencies:
+  - name: community-solid-server
+    version: 1.0.0
+    repository: https://communitysolidserver.github.io/css-helm-chart/charts/

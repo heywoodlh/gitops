@@ -1,0 +1,10 @@
+apiVersion: v2
+name: teddit
+description: A Helm chart for teddit 
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+- name: redis
+  version: "15.6.10"
+  repository: https://charts.bitnami.com/bitnami

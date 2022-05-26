@@ -1,0 +1,16 @@
+metallb:
+  global:
+    nameOverride: "metallb"
+    fullnameOverride: "metallb"
+  configInline:
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 10.0.60.100-10.0.60.250
+    - name: reserved
+      protocol: layer2
+      addresses:
+      - 10.0.60.5-10.0.60.50
+      avoid-buggy-ips: true
+      auto-assign: false
