@@ -1,0 +1,8 @@
+apiVersion: v2
+name: kubeclarity 
+version: 0.1.0
+dependencies:
+  - name: kubeclarity 
+    version: v2.4.0 
+    repository: https://openclarity.github.io/kubeclarity
+
