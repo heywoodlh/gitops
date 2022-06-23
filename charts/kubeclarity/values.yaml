@@ -12,7 +12,7 @@ kubeclarity:
     docker:
       ## Configure registry
       ##
-      registry: "ghcr.io/openclarity/kubeclarity"
+      registry: "ghcr.io/openclarity"
       tag: "v2.4.0"
       imagePullPolicy: Always
   
@@ -31,6 +31,8 @@ kubeclarity:
     docker:
       ## Use to overwrite the global docker params
       ##
+      registry: "ghcr.io/openclarity/kubeclarity"
+      tag: "v2.4.0"
       imagePullPolicy: Always
   
     ## Logging level (debug, info, warning, error, fatal, panic).
