@@ -13,7 +13,7 @@ kubeclarity:
       ## Configure registry
       ##
       registry: "ghcr.io/openclarity"
-      tag: "v2.4.0"
+      tag: "latest"
       imagePullPolicy: Always
   
     ## Is this being installed under OpenShift restricted SCC?
@@ -31,9 +31,7 @@ kubeclarity:
     docker:
       ## Use to overwrite the global docker params
       ##
-      registry: "ghcr.io/openclarity/kubeclarity"
-      tag: "v2.4.0"
-      imagePullPolicy: Always
+      imageName: ""
   
     ## Logging level (debug, info, warning, error, fatal, panic).
     logLevel: warning
