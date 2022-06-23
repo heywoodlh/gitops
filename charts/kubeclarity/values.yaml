@@ -31,7 +31,9 @@ kubeclarity:
     docker:
       ## Use to overwrite the global docker params
       ##
-      imageName: ""
+      imageName: "ghcr.io/openclarity/kubeclarity"
+      tag: "v2.4.0"
+      imagePullPolicy: Always
   
     ## Logging level (debug, info, warning, error, fatal, panic).
     logLevel: warning
