@@ -8,7 +8,7 @@ image:
   repository: heywoodlh/hydrogen
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2022_03_snapshot"
+  tag: "2022_06_snapshot"
 
 imagePullSecrets: []
 nameOverride: ""
