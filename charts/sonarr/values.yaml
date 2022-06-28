@@ -9,7 +9,7 @@ sonarr:
   image:
     repository: linuxserver/sonarr
     pullPolicy: IfNotPresent
-    tag: "0.6.1395"
+    tag: "0.6.1402"
   service:
     main:
       enabled: true 
