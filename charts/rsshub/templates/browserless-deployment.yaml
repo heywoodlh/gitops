@@ -24,7 +24,7 @@ spec:
         io.kompose.service: browserless
     spec:
       containers:
-        - image: browserless/chrome:1.43-chrome-stable
+        - image: browserless/chrome:1.53-chrome-stable
           name: browserless
           resources: {}
       restartPolicy: Always
