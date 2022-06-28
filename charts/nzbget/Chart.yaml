@@ -3,6 +3,6 @@ name: nzbget
 version: 0.1.0
 dependencies:
   - name: nzbget
-    version: 12.0.1
+    version: 12.3.2
     repository: https://k8s-at-home.com/charts/
 
