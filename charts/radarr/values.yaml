@@ -9,7 +9,7 @@ radarr:
   image:
     repository: linuxserver/radarr
     pullPolicy: IfNotPresent
-    tag: "0.0.5553"
+    tag: "0.0.5597"
   service:
     main:
       enabled: true 
