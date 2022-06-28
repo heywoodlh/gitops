@@ -6,7 +6,7 @@ coredns:
   image:
     repository: coredns/coredns
     pullPolicy: IfNotPresent
-    tag: "1.8.6"
+    tag: "1.9.3"
   serviceType: "LoadBalancer"
   service:
     loadBalancerIP: "10.0.60.5"
