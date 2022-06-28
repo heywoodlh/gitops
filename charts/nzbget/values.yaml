@@ -9,7 +9,7 @@ nzbget:
   image:
     repository: linuxserver/nzbget
     pullPolicy: IfNotPresent
-    tag: "21.1.20220512"
+    tag: "2021.11.25"
   service:
     main:
       enabled: true 
