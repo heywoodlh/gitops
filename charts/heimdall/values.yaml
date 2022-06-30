@@ -15,7 +15,7 @@ heimdall:
   
   image:
     repository: docker.io/linuxserver/heimdall
-    tag: 2.2.2
+    tag: 2021.11.28
   service:
     main:
       enabled: true 

@@ -3,6 +3,6 @@ name: ombi
 version: 0.1.0
 dependencies:
   - name: ombi
-    version: 11.3.2
+    version: 11.4.0
     repository: https://k8s-at-home.com/charts/
 

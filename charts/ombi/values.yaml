@@ -1,7 +1,7 @@
 ombi:  
   image:
     repository: docker.io/linuxserver/ombi
-    tag: 4.20.0-development 
+    tag: 4.21.0-development 
     pullPolicy: IfNotPresent
   
     TZ: America/Denver
