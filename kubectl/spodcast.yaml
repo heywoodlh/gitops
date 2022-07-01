@@ -17,14 +17,14 @@ kind: CronJob
 metadata:
   name: spodcast
 spec:
-  schedule: "0 * * * *"
+  schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: spodcast
-            image: heywoodlh/spodcast:0.5.0
+            image: heywoodlh/spodcast:latest
             imagePullPolicy: Always
             command:
             - spodcast
