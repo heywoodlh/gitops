@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: docker.io/heywoodlh/second
   pullPolicy: IfNotPresent
-  tag: "2022_06_snapshot"
+  tag: "2022_07_snapshot"
 
 service:
   enabled: true
