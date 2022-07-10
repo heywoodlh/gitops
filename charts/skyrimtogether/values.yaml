@@ -39,6 +39,7 @@ securityContext: {}
 service:
   type: LoadBalancer 
   port: 10578
+  loadBalancerIP: 10.0.60.18
 
 ingress:
   enabled: false
