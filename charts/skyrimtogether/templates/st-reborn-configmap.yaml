@@ -8,7 +8,7 @@ data:
     fGoldLossFactor=0
     bEnablePvp=false
     bEnableGreetings=false
-    uDifficulty=4
+    uDifficulty=2
     
     [LiveServices]
     bAnnounceServer=false
