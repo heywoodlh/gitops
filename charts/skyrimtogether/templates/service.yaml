@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skyrimtogether.fullname" . }}
+  labels:
+    {{- include "skyrimtogether.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 10578 
+      protocol: UDP
+      name: st-reborn
+  selector:
+    {{- include "skyrimtogether.selectorLabels" . | nindent 4 }}

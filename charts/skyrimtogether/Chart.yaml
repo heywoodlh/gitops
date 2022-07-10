@@ -1,0 +1,6 @@
+apiVersion: v2
+name: skyrimtogether
+description: Helm chart for Skyrim Together Reborn
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
