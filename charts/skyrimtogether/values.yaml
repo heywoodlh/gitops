@@ -27,7 +27,6 @@ podAnnotations: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
-
 securityContext: {}
   # capabilities:
   #   drop:
@@ -81,3 +80,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+nodeSelector:
+  kubernetes.io/hostname: apps
