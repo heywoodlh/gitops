@@ -39,6 +39,9 @@ spec:
               protocol: UDP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /opt/skyrimtogether/config/
+              name: st-reborn-conf
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -51,3 +54,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: st-reborn-conf
+          configMap:
+            name: st-reborn-conf
+            items:
+              - key: STServer.ini
+                path: STServer.ini
+
